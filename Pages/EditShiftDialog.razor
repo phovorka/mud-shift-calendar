@@ -1,1 +1,49 @@
+@using MudBlazor
+@inherits ComponentBase
 
+<MudDialog>
+    <DialogContent>
+        <MudText Typo="Typo.h6" Class="mb-2">Upravit směnu</MudText>
+
+        <MudTextField T="string" Label="Zaměstnanec" @bind-Value="Employee" Disabled="true" Class="mb-2" />
+        <MudTextField T="string" Label="Datum" @bind-Value="Date" Disabled="true" Class="mb-2" />
+
+        <MudGrid>
+            <MudItem xs="6">
+                <MudTextField T="string" Label="Od" @bind-Value="From" InputType="InputType.Time" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField T="string" Label="Do" @bind-Value="To" InputType="InputType.Time" />
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Outlined">Zrušit</MudButton>
+        <MudButton OnClick="Save" Color="Color.Primary">Uložit</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public string Employee { get; set; } = "";
+    [Parameter] public string Date { get; set; } = "";
+    [Parameter] public string From { get; set; } = "";
+    [Parameter] public string To { get; set; } = "";
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private void Save()
+    {
+        var result = new DialogResult(true, new Dictionary<string, object>
+        {
+            ["From"] = From,
+            ["To"] = To
+        });
+        MudDialog.Close(result);
+    }
+}
