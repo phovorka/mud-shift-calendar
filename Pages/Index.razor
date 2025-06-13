@@ -1,0 +1,31 @@
+@page "/"
+@inject IDialogService DialogService
+
+<MudPaper Class="pa-4">
+    <MudButton OnClick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary">Otevřít dialog</MudButton>
+</MudPaper>
+
+@code {
+    private async Task OpenDialog()
+    {
+        var parameters = new DialogParameters
+        {
+            { "Employee", "Tomáš" },
+            { "Date", "13.6.2025" },
+            { "From", "06:00" },
+            { "To", "14:00" }
+        };
+
+        var options = new DialogOptions { CloseButton = true };
+        var dialog = DialogService.Show<EditShiftDialog>("Upravit směnu", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Cancelled)
+        {
+            var data = (Dictionary<string, object>)result.Data;
+            var from = data["From"]?.ToString();
+            var to = data["To"]?.ToString();
+            Console.WriteLine($"Uloženo: {from} – {to}");
+        }
+    }
+}
